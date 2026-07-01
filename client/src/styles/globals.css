@@ -41,3 +41,19 @@ main {
 ::-webkit-search-cancel-button {
   -webkit-appearance: none;
 }
+
+.empty-state {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.empty-state-icon {
+  color: var(--primary);
+}

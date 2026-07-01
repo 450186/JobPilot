@@ -22,13 +22,14 @@
   text-decoration: none;
   font-weight: 600;
 }
-.search-wrapper {
+.searchbar-wrapper {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  width: 45%;
+  width: 100%;
+  min-width: 500px;
 }
 .search-input {
   padding: 8px 12px;
@@ -61,12 +62,29 @@
 .del-search:hover {
   color: red;
 }
+.status-filter-wrapper, .search-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.status-filter-label, .search-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-align: center;
+}
 .status-filter {
-  padding: 0.75rem 1rem;
+  padding: 8px 12px;
   border: 1px solid var(--border);
   border-radius: 8px;
   background-color: var(--surface);
   color: var(--text);
-  width: 10%;
+  width: 100%;
   margin: 0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+.status-filter:hover {
+  background-color: var(--primary);
+  color: white;
 }

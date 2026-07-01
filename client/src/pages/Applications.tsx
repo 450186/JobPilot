@@ -3,6 +3,7 @@ import { getApplications, deleteApplication } from "../api/applications";
 import type { Application } from "../types/Application";
 import ApplicationTable from "../components/ApplicationTable";
 import ApplicationForm from "../components/ApplicationForm";
+import EmptyState from "../components/EmptyState";
 import toast from "react-hot-toast";
 import { CircleX, Search, X } from "lucide-react";
 
@@ -58,25 +59,35 @@ function Applications() {
             <div className="header">
                 <h1>Applications</h1>
                 <div className="search-wrapper">
-                    <input type="search" className="search-input" placeholder="Search company, role, notes, or location..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
-                    {searchTerm ? (
-                        <X className="search-icon del-search" size={20} strokeWidth={3} onClick={() => setSearchTerm("")} />
-                    ) : (
-                        <Search className="search-icon" size={20} strokeWidth={3} />
-                    )}
+                    <label htmlFor="search" className="search-label">
+                        Search
+                    </label>
+                    <div className="searchbar-wrapper">
+                        <input type="search" className="search-input" placeholder="Search company, role, notes, or location..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                        {searchTerm ? (
+                            <X className="search-icon del-search" size={20} strokeWidth={3} onClick={() => setSearchTerm("")} />
+                        ) : (
+                            <Search className="search-icon" size={20} strokeWidth={3} />
+                        )}
+                    </div>
                 </div>
-                <select 
-                className="status-filter"
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                >
-                    <option value="All">All</option>
-                    <option value="Saved">Saved</option>
-                    <option value="Applied">Applied</option>
-                    <option value="Interview">Interview</option>
-                    <option value="Offer">Offer</option>
-                    <option value="Rejected">Rejected</option>
-                </select>
+                <div className="status-filter-wrapper">
+                    <label htmlFor="status-filter" className="status-filter-label">
+                        Status
+                    </label>
+                    <select 
+                    className="status-filter"
+                    value={statusFilter}
+                    onChange={(e) => setStatusFilter(e.target.value)}
+                    >
+                        <option value="All">All</option>
+                        <option value="Saved">Saved</option>
+                        <option value="Applied">Applied</option>
+                        <option value="Interview">Interview</option>
+                        <option value="Offer">Offer</option>
+                        <option value="Rejected">Rejected</option>
+                    </select>
+                </div>
                 <button className="add-button" onClick={() => {
                     setIsModalOpen(true)
                     setApplicationToEdit(null)
@@ -100,17 +111,25 @@ function Applications() {
                 </div>
             )}
             {applications.length === 0 ? (
-                <p>
-                    No applications found
-                    {searchTerm && ` for "${searchTerm}"`}
-                    {statusFilter !== "All" && ` with status "${statusFilter}"`}
-                </p>
+                <EmptyState
+                title="No applications found"
+                message="Click the 'Add Application' button to get started."
+                actionLabel="Add Application"
+                onAction={() => {
+                    setApplicationToEdit(null)
+                    setIsModalOpen(true)
+                }}
+                />
                 ) : filteredApplications.length === 0 ? (
-                <p>
-                    No applications found
-                    {searchTerm && ` for "${searchTerm}"`}
-                    {statusFilter !== "All" && ` with status "${statusFilter}"`}
-                </p>
+                <EmptyState
+                title="No applications found"
+                message="Try adjusting your search or status filter."
+                actionLabel="Clear Filters"
+                onAction={() => {
+                    setSearchTerm("")
+                    setStatusFilter("All")
+                }}
+                />
                 ) : (
                 <ApplicationTable applications={filteredApplications} onEdit={(application) => {
                     setIsModalOpen(true)

@@ -16,7 +16,7 @@ export type NewApplication = {
     job_url: string,
     notes: string,
     salary: number | null,
-    deadline: string
+    deadline: string | null
 }
 
 export const createApplication = async (

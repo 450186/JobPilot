@@ -122,7 +122,14 @@ function ApplicationTable({applications, onEdit, onDelete} : TableProps) {
                             )}
                         </td>
                         <td>
-                            {formatDate(application.deadline)}
+                            {/* {application.deadline
+                                ? formatDate(application.deadline)
+                                : "Rolling Deadline"} */}
+                            {application.deadline ? (
+                                formatDate(application.deadline)
+                            ) : (
+                                <span className="rolling-deadline">Rolling Deadline</span>
+                            )}
                         </td>
                         <td>{application.location ?? "-"}</td>
                         <td className="edit-col"><button className="edit-button" onClick={() => onEdit(application)}><Pencil size={16} strokeWidth={3} /></button></td>

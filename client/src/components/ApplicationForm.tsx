@@ -21,6 +21,7 @@ function ApplicationForm({ onApplicationSaved, applicationToEdit }: ApplicationF
         salary: null,
         deadline: ''
     })
+    const [isRollingDeadline, setIsRollingDeadline] = useState(false)
 
     useEffect(() => {
         if(applicationToEdit) {
@@ -36,18 +37,24 @@ function ApplicationForm({ onApplicationSaved, applicationToEdit }: ApplicationF
                     ? applicationToEdit.deadline.split("T")[0]
                     : "",
             })
+            setIsRollingDeadline(!applicationToEdit.deadline)
         }
     }, [applicationToEdit])
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         try {
+            const applicationToSave: NewApplication = {
+                ...formData,
+                deadline: isRollingDeadline ? null : formData.deadline || null
+            }
+
             if(applicationToEdit) {
-                await updateApplication(applicationToEdit.id, formData)
+                await updateApplication(applicationToEdit.id, applicationToSave)
                 toast.success("Application updated successfully")
             } else {
-                await createApplication(formData)
-                toast.success("Application created successfully")
+                await createApplication(applicationToSave)
+                toast.success("Application saved successfully")
             }
             setFormData({
                 company: '',
@@ -60,6 +67,7 @@ function ApplicationForm({ onApplicationSaved, applicationToEdit }: ApplicationF
                 deadline: ''
             })
             onApplicationSaved()
+            setIsRollingDeadline(false)
         } catch (error) {
             toast.error("Error saving application")
         }
@@ -135,12 +143,32 @@ function ApplicationForm({ onApplicationSaved, applicationToEdit }: ApplicationF
                 })
             }
             />
-            <input
-                name="deadline"
-                type="date"
-                value={formData.deadline}
-                onChange={handleChange}
-            />
+            <div className="deadline-row">
+                <input
+                    name="deadline"
+                    type="date"
+                    value={formData.deadline}
+                    onChange={handleChange}
+                    disabled={isRollingDeadline}
+                />
+                <label>
+                    <input
+                        type="checkbox"
+                        checked={isRollingDeadline}
+                        onChange={(e) => {
+                                setIsRollingDeadline(e.target.checked);
+                                if (e.target.checked) {
+                                    setFormData({
+                                        ...formData,
+                                        deadline: "",
+                                    });
+                                }
+                            }
+                        }
+                    />
+                    Rolling Deadline
+                </label>
+            </div>
             <button type="submit">{applicationToEdit ? "Save Changes" : "Add Application"}</button>
         </form>
     )
