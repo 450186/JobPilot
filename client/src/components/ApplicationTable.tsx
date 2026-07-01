@@ -1,5 +1,7 @@
 import type { Application } from "../types/Application";
+import '../styles/table.css'
 import StatusBadge from "./statusBadge";
+import formatDate from "../utils/formatDate";
 
 type TableProps = {
     applications: Application[]
@@ -35,7 +37,9 @@ function ApplicationTable({applications} : TableProps) {
                                 "-"
                             )}
                         </td>
-                        <td>{application.deadline ?? "-"}</td>
+                        <td>
+                            {formatDate(application.deadline)}
+                        </td>
                         <td>{application.location ?? "-"}</td>
                     </tr>
                 ))}

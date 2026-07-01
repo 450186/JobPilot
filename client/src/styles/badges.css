@@ -1,17 +1,17 @@
 .applied {
-  background-color: #2f83d6;
+  background-color: var(--applied);
 }
 .interviewing {
-  background-color: #eebd2b;
+  background-color: var(--interview);
 }
 .offer {
-  background-color: #10b981;
+  background-color: var(--offer);
 }
 .rejected {
-  background-color: #ef4444;
+  background-color: var(--rejected);
 }
 .saved {
-  background-color: #c9d9f3;
+  background-color: var(--saved);
   color: #1e293b;
 }
 .status-badge {

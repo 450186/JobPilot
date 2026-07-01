@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { getApplications } from "../api/applications"
 import type { Application } from "../types/Application"
+import '../styles/dashboard.css'
 import StatusBadge from "../components/statusBadge";
 
 function Dashboard() {

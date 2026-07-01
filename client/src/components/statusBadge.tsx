@@ -1,4 +1,5 @@
 import type { Application } from "../types/Application";
+import '../styles/badges.css'
 
 interface StatusBadgeProps {
     status: Application["status"]
