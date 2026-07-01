@@ -1,10 +1,11 @@
 table {
-  width: 80%;
+  width: 100%;
   margin: 0 auto;
   border-collapse: collapse;
   background: white;
   border-radius: 12px;
   overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 th,
@@ -22,4 +23,32 @@ th {
 
 tr:last-child td {
   border-bottom: none;
+}
+.notes-col {
+  width: 200px;
+}
+.link-col {
+  width: 100px;
+}
+.edit-button, .delete-button {
+  cursor: pointer;
+  background: transparent;
+  border: none;
+}
+.edit-button {
+  color: #2563eb;
+}
+.delete-button {
+  color: #ef4444;
+}
+.edit-button:hover {
+  color: #2563eb;
+  opacity: 0.8;
+  transform: translateY(-4px);
+  font-weight: bold;
+}
+.delete-button:hover {
+  color: #ef4444;
+  opacity: 0.8;
+  transform: translateY(-4px)
 }
