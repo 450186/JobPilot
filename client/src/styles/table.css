@@ -1,0 +1,25 @@
+table {
+  width: 80%;
+  margin: 0 auto;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+th,
+td {
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+th {
+  background: #f1f5f9;
+  font-size: 14px;
+  color: #475569;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}

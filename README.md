@@ -35,16 +35,45 @@ The project is being built as a portfolio piece to demonstrate TypeScript, React
 
 ## Project Structure
 
-```txt
+```
 JobPilot
+├─ README.md
 ├─ client
-├─ server
-│  ├─ src
-│  │  ├─ db.ts
-│  │  ├─ index.ts
-│  │  └─ routes
-│  │     └─ applications.ts
-│  ├─ .env
+│  ├─ README.md
+│  ├─ eslint.config.js
+│  ├─ index.html
+│  ├─ package-lock.json
 │  ├─ package.json
-│  └─ tsconfig.json
-└─ README.md
+│  ├─ public
+│  │  ├─ favicon.svg
+│  │  └─ icons.svg
+│  ├─ src
+│  │  ├─ App.tsx
+│  │  ├─ api
+│  │  │  └─ applications.ts
+│  │  ├─ components
+│  │  │  ├─ ApplicationTable.tsx
+│  │  │  └─ Navbar.tsx
+│  │  ├─ index.css
+│  │  ├─ main.tsx
+│  │  ├─ pages
+│  │  │  ├─ Applications.tsx
+│  │  │  └─ Dashboard.tsx
+│  │  ├─ styles
+│  │  └─ types
+│  │     └─ Applications.ts
+│  ├─ tsconfig.app.json
+│  ├─ tsconfig.json
+│  ├─ tsconfig.node.json
+│  └─ vite.config.ts
+└─ server
+   ├─ package-lock.json
+   ├─ package.json
+   ├─ src
+   │  ├─ db.ts
+   │  ├─ index.ts
+   │  └─ types
+   │     └─ Applcations.ts
+   └─ tsconfig.json
+
+```

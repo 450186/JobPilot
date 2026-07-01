@@ -1,0 +1,24 @@
+.applied {
+  background-color: #2f83d6;
+}
+.interviewing {
+  background-color: #eebd2b;
+}
+.offer {
+  background-color: #10b981;
+}
+.rejected {
+  background-color: #ef4444;
+}
+.saved {
+  background-color: #c9d9f3;
+  color: #1e293b;
+}
+.status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+}
