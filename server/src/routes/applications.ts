@@ -5,7 +5,8 @@ const router = Router();
 
 router.get("/", async(req, res) => {
     try {
-        const result = await pool.query("SELECT * FROM applications");
+        const result = await pool.query(
+            "SELECT * FROM applications ORDER by deadline ASC NULLS LAST");
         res.json(result.rows);
     } catch (err) {
         console.log("Error fetching applications: ", err);

@@ -3,12 +3,14 @@ import { getApplications, deleteApplication } from "../api/applications";
 import type { Application } from "../types/Application";
 import ApplicationTable from "../components/ApplicationTable";
 import ApplicationForm from "../components/ApplicationForm";
-import { CircleX } from "lucide-react";
+import toast from "react-hot-toast";
+import { CircleX, Search } from "lucide-react";
 
 function Applications() {
     const [applications, setApplications] = useState<Application[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [applicationToEdit, setApplicationToEdit] = useState<Application | null>(null);
+    const [searchTerm, setSearchTerm] = useState("");
 
         const fetchApplications = async () => {
             try{
@@ -25,9 +27,11 @@ function Applications() {
             if(confirmed) {
                 try {
                     await deleteApplication(application.id);
+                    toast.success("Application deleted successfully")
                     fetchApplications();
                 } catch (error) {
                     console.log("Error deleting application: ", error);
+                    toast.error("Error deleting application")
                 }
             }
         }
@@ -36,10 +40,22 @@ function Applications() {
         fetchApplications()
     }, [])
 
+    const filteredApplications = applications.filter(application => {
+        const search = searchTerm.toLowerCase();
+        return (
+            application.company.toLowerCase().includes(search) ||
+            application.role.toLowerCase().includes(search)
+        )
+    })
+
     return (
         <main>
             <div className="header">
                 <h1>Applications</h1>
+                <div className="search-wrapper">
+                    <input type="search" className="search-input" placeholder="Search company or role..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                    <Search className="search-icon" size={20} color="black" strokeWidth={3} />
+                </div>
                 <button className="add-button" onClick={() => {
                     setIsModalOpen(true)
                     setApplicationToEdit(null)
@@ -62,15 +78,16 @@ function Applications() {
                     </div>
                 </div>
             )}
-            {applications.length > 0 ? (
-                <ApplicationTable applications={applications} onEdit={(application) => {
-                    setApplicationToEdit(application)
-                    setIsModalOpen(true)
-                }}
-                onDelete={handleDelete}/>
-            ): ( applications.length === 0 && (
+            {applications.length === 0 ? (
                 <p>No applications found</p>
-            ))}
+            ) : filteredApplications.length === 0 ? (
+                <p>No applications found for "{searchTerm}"</p>
+            ) : (
+                <ApplicationTable applications={filteredApplications} onEdit={(application) => {
+                    setIsModalOpen(true)
+                    setApplicationToEdit(application)
+                }} onDelete={handleDelete} />
+            )}
         </main>
     )
 }

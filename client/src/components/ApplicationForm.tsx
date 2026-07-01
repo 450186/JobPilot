@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { createApplication, updateApplication } from "../api/applications"
 import type { NewApplication } from "../api/applications"
 import type { Application } from "../types/Application"
+import toast from "react-hot-toast"
 import '../styles/forms.css'
 
 type ApplicationFormProps = {
@@ -40,22 +41,28 @@ function ApplicationForm({ onApplicationSaved, applicationToEdit }: ApplicationF
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        if(applicationToEdit) {
-            await updateApplication(applicationToEdit.id, formData)
-        } else {
-            await createApplication(formData)
+        try {
+            if(applicationToEdit) {
+                await updateApplication(applicationToEdit.id, formData)
+                toast.success("Application updated successfully")
+            } else {
+                await createApplication(formData)
+                toast.success("Application created successfully")
+            }
+            setFormData({
+                company: '',
+                role: '',
+                location: '',
+                status: 'Saved',
+                job_url: '',
+                notes: '',
+                salary: null,
+                deadline: ''
+            })
+            onApplicationSaved()
+        } catch (error) {
+            toast.error("Error saving application")
         }
-        setFormData({
-            company: '',
-            role: '',
-            location: '',
-            status: 'Saved',
-            job_url: '',
-            notes: '',
-            salary: null,
-            deadline: ''
-        })
-        onApplicationSaved()
     }
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
