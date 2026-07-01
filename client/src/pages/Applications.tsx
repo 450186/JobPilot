@@ -4,13 +4,14 @@ import type { Application } from "../types/Application";
 import ApplicationTable from "../components/ApplicationTable";
 import ApplicationForm from "../components/ApplicationForm";
 import toast from "react-hot-toast";
-import { CircleX, Search } from "lucide-react";
+import { CircleX, Search, X } from "lucide-react";
 
 function Applications() {
     const [applications, setApplications] = useState<Application[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [applicationToEdit, setApplicationToEdit] = useState<Application | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
+    const [statusFilter, setStatusFilter] = useState("All");
 
         const fetchApplications = async () => {
             try{
@@ -24,7 +25,6 @@ function Applications() {
         const handleDelete = async(application: Application) => {
             const confirmed = window.confirm(`Are you sure you want to delete ${application.role} at ${application.company}?`);
             if(!confirmed) return
-            if(confirmed) {
                 try {
                     await deleteApplication(application.id);
                     toast.success("Application deleted successfully")
@@ -33,7 +33,6 @@ function Applications() {
                     console.log("Error deleting application: ", error);
                     toast.error("Error deleting application")
                 }
-            }
         }
 
     useEffect(() => {
@@ -42,10 +41,16 @@ function Applications() {
 
     const filteredApplications = applications.filter(application => {
         const search = searchTerm.toLowerCase();
-        return (
+
+        const matchesSearch =
             application.company.toLowerCase().includes(search) ||
-            application.role.toLowerCase().includes(search)
-        )
+            application.role.toLowerCase().includes(search) ||
+            application.location?.toLowerCase().includes(search) ||
+            application.notes?.toLowerCase().includes(search);
+        
+        const matchesStatus = statusFilter === "All" || application.status === statusFilter;
+        
+        return matchesSearch && matchesStatus;
     })
 
     return (
@@ -53,9 +58,25 @@ function Applications() {
             <div className="header">
                 <h1>Applications</h1>
                 <div className="search-wrapper">
-                    <input type="search" className="search-input" placeholder="Search company or role..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
-                    <Search className="search-icon" size={20} color="black" strokeWidth={3} />
+                    <input type="search" className="search-input" placeholder="Search company, role, notes, or location..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                    {searchTerm ? (
+                        <X className="search-icon del-search" size={20} strokeWidth={3} onClick={() => setSearchTerm("")} />
+                    ) : (
+                        <Search className="search-icon" size={20} strokeWidth={3} />
+                    )}
                 </div>
+                <select 
+                className="status-filter"
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                >
+                    <option value="All">All</option>
+                    <option value="Saved">Saved</option>
+                    <option value="Applied">Applied</option>
+                    <option value="Interview">Interview</option>
+                    <option value="Offer">Offer</option>
+                    <option value="Rejected">Rejected</option>
+                </select>
                 <button className="add-button" onClick={() => {
                     setIsModalOpen(true)
                     setApplicationToEdit(null)
@@ -79,10 +100,18 @@ function Applications() {
                 </div>
             )}
             {applications.length === 0 ? (
-                <p>No applications found</p>
-            ) : filteredApplications.length === 0 ? (
-                <p>No applications found for "{searchTerm}"</p>
-            ) : (
+                <p>
+                    No applications found
+                    {searchTerm && ` for "${searchTerm}"`}
+                    {statusFilter !== "All" && ` with status "${statusFilter}"`}
+                </p>
+                ) : filteredApplications.length === 0 ? (
+                <p>
+                    No applications found
+                    {searchTerm && ` for "${searchTerm}"`}
+                    {statusFilter !== "All" && ` with status "${statusFilter}"`}
+                </p>
+                ) : (
                 <ApplicationTable applications={filteredApplications} onEdit={(application) => {
                     setIsModalOpen(true)
                     setApplicationToEdit(application)

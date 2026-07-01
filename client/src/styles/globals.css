@@ -37,3 +37,7 @@ main {
   align-items: center;
   margin-bottom: 32px;
 }
+
+::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}

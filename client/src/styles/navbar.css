@@ -43,8 +43,30 @@
   position: absolute;
   right: 12px;
   cursor: pointer;
+  color: var(--text);
+  transition: color 0.2s ease;
+}
+.search-icon:hover {
+  color: var(--primary);
 }
 .search-input:focus {
   outline: none;
   border-color: var(--border);
+}
+.del-search {
+  cursor: pointer;
+  color: var(--text);
+  transition: color 0.2s ease;
+}
+.del-search:hover {
+  color: red;
+}
+.status-filter {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background-color: var(--surface);
+  color: var(--text);
+  width: 10%;
+  margin: 0;
 }
