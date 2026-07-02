@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import pool from "./db";
 import router from "./routes/applications";
+import authRouter from "./routes/auth";
 
 dotenv.config();
 
@@ -27,6 +28,7 @@ pool.query('SELECT NOW()', (err, res) => {
 })
 
 app.use("/applications", router);
+app.use("/auth", authRouter);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`)

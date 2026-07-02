@@ -1,12 +1,19 @@
 import { Router } from "express";
+import { authMiddleware, AuthRequest } from "../middleware/authMiddleware";
 import pool from "../db";
+import { Application } from "../types/Application";
 
 const router = Router();
 
-router.get("/", async(req, res) => {
+router.use(authMiddleware);
+
+router.get("/", async(req: AuthRequest, res) => {
     try {
+        const userId = req.user!.id;
         const result = await pool.query(
-            "SELECT * FROM applications ORDER by deadline ASC NULLS LAST");
+            "SELECT * FROM applications WHERE user_id = $1 ORDER by deadline ASC NULLS LAST",
+            [userId]
+        );
         res.json(result.rows);
     } catch (err) {
         console.log("Error fetching applications: ", err);
@@ -14,8 +21,9 @@ router.get("/", async(req, res) => {
     }
 })
 
-router.post('/', async(req, res) => {
+router.post('/', async(req: AuthRequest, res) => {
     try {
+        const userId = req.user!.id;
         const {
             company,
             role, 
@@ -24,13 +32,13 @@ router.post('/', async(req, res) => {
             job_url,
             notes,
             salary,
-            deadline
+            deadline,
         } = req.body;
         const result = await pool.query(
-            `INSERT INTO applications (company, role, location, status, job_url, notes, salary, deadline) 
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+            `INSERT INTO applications (company, role, location, status, job_url, notes, salary, deadline, user_id) 
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
             RETURNING *`,
-            [company, role, location, status, job_url, notes, salary, deadline]
+            [company, role, location, status, job_url, notes, salary, deadline, userId]
         );
         res.status(201).json(result.rows[0]);
         } catch (err) {
@@ -39,9 +47,10 @@ router.post('/', async(req, res) => {
         }
 })
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', async (req: AuthRequest, res) => {
     try {
         const {id} = req.params;
+        const userId = req.user!.id;
         const {
             company,
             role, 
@@ -56,8 +65,9 @@ router.put('/:id', async (req, res) => {
             `UPDATE applications 
             SET company = $1, role = $2, location = $3, status = $4, job_url = $5, notes = $6, salary = $7, deadline = $8
             WHERE id = $9
+            AND user_id = $10
             RETURNING *`,
-            [company, role, location, status, job_url, notes, salary, deadline, id]
+            [company, role, location, status, job_url, notes, salary, deadline, id, userId]
         );
         if(result.rows.length === 0) {
             return res.status(404).json({ error: "Application not found" });
@@ -69,10 +79,11 @@ router.put('/:id', async (req, res) => {
     }
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', async (req: AuthRequest, res) => {
     try{
         const {id} = req.params;
-        const result = await pool.query("DELETE FROM applications WHERE id = $1 RETURNING *", [id]);
+        const userId = req.user!.id;
+        const result = await pool.query("DELETE FROM applications WHERE id = $1 AND user_id = $2 RETURNING *", [id, userId]);
         if(result.rows.length === 0) {
             return res.status(404).json({ error: "Application not found" });
         }

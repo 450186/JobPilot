@@ -3,8 +3,18 @@ import type { Application } from '../types/Application'
 
 const API_URL = 'http://localhost:5001'
 
+const getAuthHeaders = () => {
+    const token = localStorage.getItem('token')
+
+    return {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }   
+}
+
 export const getApplications = async (): Promise<Application[]> => {
-    const response = await axios.get(`${API_URL}/applications`)
+    const response = await axios.get(`${API_URL}/applications`, getAuthHeaders())
     return response.data
 }
 
@@ -22,7 +32,7 @@ export type NewApplication = {
 export const createApplication = async (
     application: NewApplication
 ): Promise<Application> => {
-    const response = await axios.post(`${API_URL}/applications`, application)
+    const response = await axios.post(`${API_URL}/applications`, application, getAuthHeaders())
     return response.data
 }
 
@@ -30,12 +40,12 @@ export const updateApplication = async (
     id: number,
     application: NewApplication
 ): Promise<Application> => {
-    const response = await axios.put(`${API_URL}/applications/${id}`, application)
+    const response = await axios.put(`${API_URL}/applications/${id}`, application, getAuthHeaders())
     return response.data
 }
 
 export const deleteApplication = async (
     id: number
 ): Promise<void> => (
-    await axios.delete(`${API_URL}/applications/${id}`)
+    await axios.delete(`${API_URL}/applications/${id}`, getAuthHeaders())
 )
