@@ -134,14 +134,24 @@ button[type="submit"] {
 .progress-bar {
     background-color: var(--background);
     height: 4px;
-    width: 0;
+    width: 75%;
     transition: width 0.3s ease-in-out;
+    margin: 0 auto;
+    height: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
 }
 .progress-fill {
     background-color: var(--primary);
     height: 4px;
     width: 0;
+    height: 10px;
     transition: width 0.3s ease-in-out;
+    border-radius: 8px;
+}
+.progress-text {
+    text-align: center;
+    margin-top: 8px;
 }
 .register-form button:disabled {
   opacity: 0.45;
@@ -159,6 +169,15 @@ button[type="submit"] {
     flex-direction: row;
     gap: 8px
 }
-.register-btn {
+.register-btn, .login-btn {
     width: fit-content !important;
+}
+.password-reqs {
+    width: 75%;
+    margin: 0 auto;
+}
+.password-reqs li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
