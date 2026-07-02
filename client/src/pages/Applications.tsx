@@ -16,7 +16,9 @@ function Applications() {
 
         const fetchApplications = async () => {
             try{
+                console.log("Fetching applications...")
                 const applications = await getApplications();
+                console.log(applications)
                 setApplications(applications);
             } catch (error) {
                 console.log("Error fetching applications: ", error);
