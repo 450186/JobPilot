@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { authMiddleware, AuthRequest } from "../middleware/authMiddleware";
 import pool from "../db";
-import { Application } from "../types/Application";
 
 const router = Router();
 
@@ -63,7 +62,7 @@ router.put('/:id', async (req: AuthRequest, res) => {
         } = req.body;
         const result = await pool.query(
             `UPDATE applications 
-            SET company = $1, role = $2, location = $3, status = $4, job_url = $5, notes = $6, salary = $7, deadline = $8
+            SET company = $1, role = $2, location = $3, status = $4, job_url = $5, notes = $6, salary = $7, deadline = $8, updated_at = CURRENT_TIMESTAMP
             WHERE id = $9
             AND user_id = $10
             RETURNING *`,

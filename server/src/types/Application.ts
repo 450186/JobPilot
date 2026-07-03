@@ -14,5 +14,7 @@ export interface Application {
     job_url: string | null,
     notes: string | null,
     salary: number | null,
-    deadline: string | null
+    deadline: string | null,
+    created_at: Date,
+    updated_at: Date
 }

@@ -64,7 +64,6 @@ function Register() {
         <main>
             <form className="register-form" onSubmit={handleRegister}>
                 <h2>Register</h2>
-                {/* <h2>register test</h2> */}
                 {step === 1 && (
                     <input ref={inputRef} type="text" value={first_name} onChange={(e) => setFirstName(e.target.value)} placeholder="First Name" />
                 )}

@@ -1,7 +1,11 @@
 :root {
   --primary: #2563eb;
+  --subtle-primary: #89b1f2;
+
   --background: #f8fafc;
   --surface: #ffffff;
+  --surface-secondary: #f1f5f9;
+
   --border: #e5e7eb;
 
   --text: #0f172a;
