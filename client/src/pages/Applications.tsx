@@ -6,6 +6,7 @@ import ApplicationForm from "../components/ApplicationForm";
 import EmptyState from "../components/EmptyState";
 import toast from "react-hot-toast";
 import { CircleX, Search, X } from "lucide-react";
+import ApplicationFormModal from "../components/ApplicationFormModal";
 
 function Applications() {
     const [applications, setApplications] = useState<Application[]>([]);
@@ -95,23 +96,16 @@ function Applications() {
                     setApplicationToEdit(null)
                 }}>Add Application</button>
             </div>
-            {isModalOpen && (
-                <div className="modal-backdrop">
-                    <div className="modal">
-                        <button className="close-button" onClick={() => {
-                            setIsModalOpen(false)
-                            setApplicationToEdit(null)
-                        }}><CircleX className="x-icon" size={20} color="red" strokeWidth={3} /></button>
-                        <ApplicationForm onApplicationSaved={() => {
-                            fetchApplications();
-                            setApplicationToEdit(null)
-                            setIsModalOpen(false)
-                        }}
-                        applicationToEdit={applicationToEdit}
-                        />
-                    </div>
-                </div>
-            )}
+q           <ApplicationFormModal 
+                applicationToEdit={applicationToEdit} 
+                isOpen={isModalOpen} 
+                onClose={() => setIsModalOpen(false)} 
+                onSaved={() => {
+                    fetchApplications()
+                    setIsModalOpen(false)
+                    setApplicationToEdit(null)
+                }}
+            />
             {applications.length === 0 ? (
                 <EmptyState
                 title="No applications found"

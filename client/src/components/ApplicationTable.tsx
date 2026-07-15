@@ -116,15 +116,16 @@ function ApplicationTable({applications, onEdit, onDelete} : TableProps) {
                         </td>
                         <td>
                             {application.salary ? (
-                                `£${application.salary.toLocaleString()}`
+                                new Intl.NumberFormat("en-GB", {
+                                    style: "currency",
+                                    currency: "GBP",
+                                    maximumFractionDigits: 0,
+                                }).format(application.salary)
                             ) : (
                                 "-"
                             )}
                         </td>
                         <td>
-                            {/* {application.deadline
-                                ? formatDate(application.deadline)
-                                : "Rolling Deadline"} */}
                             {application.deadline ? (
                                 formatDate(application.deadline)
                             ) : (

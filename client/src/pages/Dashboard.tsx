@@ -8,24 +8,51 @@ import getDeadlineText from "../utils/deadlineText";
 import getDeadlineClass from "../utils/deadlineClass";
 import formatRelativeDate from "../utils/formatRelativeDates";
 import ApplicationTimeline from "../components/ApplicationTimeline";
+import ApplicationModal from "../components/ApplicationModal";
+import ApplicationFormModal from "../components/ApplicationFormModal";
 import {Clock3, Calendar1, Building2} from 'lucide-react'
+import { deleteApplication } from "../api/applications";
+import toast from "react-hot-toast";
 
 function Dashboard() {
     const [applications, setApplications] = useState<Application[]>([]);
-    const [activityView, setActivityView] = useState< "week" | "month" | "year" >("year")
+    const [selectedApplication, setSelectedApplication] = useState<Application | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+
+    const fetchApplications = async () => {
+        try {
+            const applications = await getApplications();
+            setApplications(applications);
+        } catch (error) {
+            console.log("Error fetching applications: ", error);
+        }
+    }
 
     useEffect(() => {
-        const fetchApplications = async () => {
-            try {
-                const applications = await getApplications();
-                setApplications(applications);
-            } catch (error) {
-                console.log("Error fetching applications: ", error);
-            }
-
-        }
         fetchApplications();
     }, [])
+
+    const handleDelete = async (application: Application) => {
+        const confirmed = window.confirm(
+            `Are you sure you want to delete ${application.role} at ${application.company}?`
+        );
+
+        if (!confirmed) return;
+
+        try {
+            await deleteApplication(application.id);
+            toast.success("Application deleted successfully");
+
+            setIsModalOpen(false);
+            setSelectedApplication(null);
+
+            fetchApplications();
+        } catch (error) {
+            console.log("Error deleting application:", error);
+            toast.error("Error deleting application");
+        }
+    };
 
     const user = JSON.parse(localStorage.getItem("user") || "{}")
 
@@ -36,16 +63,25 @@ function Dashboard() {
     const rejected = applications.filter(application => application.status === "Rejected").length
     const saved = applications.filter(application => application.status === "Saved").length
 
-const upcomingDeadlines = applications
-    .filter(application =>
-        application.deadline &&
-        (application.status === "Saved" ||
-         application.status === "Applied")
-    )
+    const upcomingDeadlines = applications
+    .filter((application) => {
+        if (!application.deadline) return false;
+
+        const deadline = new Date(application.deadline);
+        const today = new Date();
+
+        deadline.setHours(0, 0, 0, 0);
+        today.setHours(0, 0, 0, 0);
+
+        return (
+        deadline >= today &&
+        (application.status === "Saved" || application.status === "Applied")
+        );
+    })
     .sort(
         (a, b) =>
-            new Date(a.deadline!).getTime() -
-            new Date(b.deadline!).getTime()
+        new Date(a.deadline!).getTime() -
+        new Date(b.deadline!).getTime()
     )
     .slice(0, 3);
 
@@ -57,27 +93,6 @@ const upcomingDeadlines = applications
             new Date(a.created_at).getTime()
     )
     .slice(0, 3);
-
-    const GetApplicationsInRange = () => {
-        const now = new Date();
-        return applications.filter(application => {
-            const createdAt = new Date(application.created_at);
-
-            if(activityView === "week") {
-                const weekAgo = new Date();
-                weekAgo.setDate(now.getDate() - 7);
-                return createdAt >= weekAgo;
-            }
-            if(activityView === "month") {
-                return (
-                    createdAt.getMonth() === now.getMonth() &&
-                    createdAt.getFullYear() === now.getFullYear()
-                )
-            }
-            return createdAt.getFullYear() === now.getFullYear();
-        })
-    }
-    const activityApplications = GetApplicationsInRange()
 
     return (
         <main>
@@ -114,7 +129,7 @@ const upcomingDeadlines = applications
                 <div className="right-side">
                     <div className="app-activity-sec">
                         <h2 className="grid-header">Application Timeline</h2>
-                        <ApplicationTimeline applications={activityApplications}/>
+                        <ApplicationTimeline applications={applications}/>
                     </div>
                 </div>
             </div>
@@ -124,7 +139,7 @@ const upcomingDeadlines = applications
                     <p>No Upcoming Deadlines</p>
                 ) : (
                     upcomingDeadlines.map((application) => (
-                        <div className="dashboard-card" key={application.id}>
+                        <div className="dashboard-card" key={application.id} onClick={() => {setSelectedApplication(application); setIsModalOpen(true)}}>
                             <h3>{application.role} at {application.company}</h3>
                             <div className="dashboard-byline">
                                 <div className="dashboard-group">
@@ -143,7 +158,7 @@ const upcomingDeadlines = applications
                     <p>No Recent Applications</p>
                 ) : (
                     recentApplications.map((application) => (
-                        <div className="dashboard-card" key={application.id}>
+                        <div className="dashboard-card" key={application.id} onClick={() => {setSelectedApplication(application); setIsModalOpen(true)}}>
                             <h3>{application.role}</h3>
                             <div className="dashboard-byline">
                                 <div className="recent-metadata">
@@ -158,6 +173,29 @@ const upcomingDeadlines = applications
                     ))
                 )}
             </section>
+            <ApplicationModal
+                application={selectedApplication}
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onEdit = {() => {
+                    setIsModalOpen(false)
+                    setIsFormModalOpen(true)
+                }}
+                onDelete = {handleDelete}
+            />
+            <ApplicationFormModal
+                isOpen={isFormModalOpen}
+                applicationToEdit={selectedApplication}
+                onClose={() => {
+                    setIsFormModalOpen(false);
+                    setSelectedApplication(null);
+                }}
+                onSaved={() => {
+                    fetchApplications();
+                    setIsFormModalOpen(false);
+                    setSelectedApplication(null);
+                }}
+            />
         </main>
     )
 }
