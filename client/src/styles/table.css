@@ -20,7 +20,10 @@ th {
   font-size: 14px;
   color: #475569;
 }
-
+.deadline-passed {
+  color: var(--rejected);
+  font-weight: bold;
+}
 tr:last-child td {
   border-bottom: none;
 }

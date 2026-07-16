@@ -55,6 +55,11 @@ function ApplicationTable({applications, onEdit, onDelete} : TableProps) {
         };
         return SortOrder === "asc" ? <ChevronUp size={16}/> : <ChevronDown size={16}/>;
     } 
+    const hasDeadlinePassed = (deadline: string): boolean => {
+        const today = new Date();
+        const deadlineDate = new Date(deadline);
+        return deadlineDate < today;
+    }
     return (
         <table>
             <thead>
@@ -96,7 +101,7 @@ function ApplicationTable({applications, onEdit, onDelete} : TableProps) {
             </thead>
             <tbody>
                 {sortedApplications.map((application) => (
-                    <tr key={application.id}>
+                    <tr key={application.id} >
                         <td>{application.company}</td>
                         <td>{application.role}</td>
                         <td><StatusBadge status={application.status} /></td>
@@ -118,7 +123,7 @@ function ApplicationTable({applications, onEdit, onDelete} : TableProps) {
                             {application.salary ? (
                                 new Intl.NumberFormat("en-GB", {
                                     style: "currency",
-                                    currency: "GBP",
+                                    currency: "GBP", 
                                     maximumFractionDigits: 0,
                                 }).format(application.salary)
                             ) : (
@@ -127,7 +132,11 @@ function ApplicationTable({applications, onEdit, onDelete} : TableProps) {
                         </td>
                         <td>
                             {application.deadline ? (
-                                formatDate(application.deadline)
+                                hasDeadlinePassed(application.deadline) ? (
+                                    <span className="deadline-passed">{formatDate(application.deadline)}</span>
+                                ) : (
+                                    formatDate(application.deadline)                                    
+                                )
                             ) : (
                                 <span className="rolling-deadline">Rolling Deadline</span>
                             )}

@@ -2,10 +2,9 @@ import { useEffect, useState } from "react";
 import { getApplications, deleteApplication } from "../api/applications";
 import type { Application } from "../types/Application";
 import ApplicationTable from "../components/ApplicationTable";
-import ApplicationForm from "../components/ApplicationForm";
 import EmptyState from "../components/EmptyState";
 import toast from "react-hot-toast";
-import { CircleX, Search, X } from "lucide-react";
+import { Search, X, SquareChevronLeft, SquareChevronRight } from "lucide-react";
 import ApplicationFormModal from "../components/ApplicationFormModal";
 
 function Applications() {
@@ -14,6 +13,8 @@ function Applications() {
     const [applicationToEdit, setApplicationToEdit] = useState<Application | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [statusFilter, setStatusFilter] = useState("All");
+    const [applicationPage, setApplicationPage] = useState(1);
+    const appsPerPage = 10
 
         const fetchApplications = async () => {
             try{
@@ -57,6 +58,12 @@ function Applications() {
         return matchesSearch && matchesStatus;
     })
 
+    const totalPages = Math.ceil(filteredApplications.length / appsPerPage)
+    const startIndex = (applicationPage - 1) * appsPerPage
+    const endIndex = startIndex + appsPerPage
+
+    const visibleApplications = applications.slice(startIndex, endIndex)
+
     return (
         <main>
             <div className="header">
@@ -96,7 +103,7 @@ function Applications() {
                     setApplicationToEdit(null)
                 }}>Add Application</button>
             </div>
-q           <ApplicationFormModal 
+            <ApplicationFormModal 
                 applicationToEdit={applicationToEdit} 
                 isOpen={isModalOpen} 
                 onClose={() => setIsModalOpen(false)} 
@@ -127,11 +134,24 @@ q           <ApplicationFormModal
                 }}
                 />
                 ) : (
-                <ApplicationTable applications={filteredApplications} onEdit={(application) => {
+                <ApplicationTable applications={visibleApplications} onEdit={(application) => {
                     setIsModalOpen(true)
                     setApplicationToEdit(application)
                 }} onDelete={handleDelete} />
             )}
+            <div className="pagination">
+                <button className="pagination-btn"
+                disabled={applicationPage === 1} 
+                onClick={() => setApplicationPage(applicationPage - 1)}>
+                    <SquareChevronLeft className="page-chevron" size={30} strokeWidth={3} />
+                </button>
+                <p className="pagination-page">{applicationPage} of {totalPages}</p>
+                <button className="pagination-btn"
+                disabled={applicationPage === totalPages}
+                onClick={() => setApplicationPage(applicationPage + 1)}>
+                    <SquareChevronRight className="page-chevron" size={30} strokeWidth={3} />
+                </button>
+            </div>
         </main>
     )
 }

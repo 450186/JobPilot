@@ -7,8 +7,10 @@ export default function formatRelativeDate(date: string) {
 
     const difference =
         Math.ceil((today.getTime() - target.getTime()) / (1000 * 60 * 60 * 24));
-
-    if (difference <= 0) {
+    if(difference < 0) {
+        return "In the future";
+    }
+    if (difference === 0) {
         return "Today";
     }
 
