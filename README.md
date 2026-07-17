@@ -35,6 +35,7 @@ The project is being built as a portfolio piece to demonstrate TypeScript, React
 
 ## Project Structure
 
+
 ```
 JobPilot
 ├─ README.md
@@ -50,18 +51,37 @@ JobPilot
 │  ├─ src
 │  │  ├─ App.tsx
 │  │  ├─ api
-│  │  │  └─ applications.ts
+│  │  │  ├─ applications.ts
+│  │  │  └─ auth.ts
 │  │  ├─ components
+│  │  │  ├─ ApplicationForm.tsx
+│  │  │  ├─ ApplicationFormModal.tsx
+│  │  │  ├─ ApplicationModal.tsx
 │  │  │  ├─ ApplicationTable.tsx
-│  │  │  └─ Navbar.tsx
-│  │  ├─ index.css
+│  │  │  ├─ ApplicationTimeline.tsx
+│  │  │  ├─ EmptyState.tsx
+│  │  │  ├─ Navbar.tsx
+│  │  │  └─ statusBadge.tsx
 │  │  ├─ main.tsx
 │  │  ├─ pages
 │  │  │  ├─ Applications.tsx
-│  │  │  └─ Dashboard.tsx
+│  │  │  ├─ Dashboard.tsx
+│  │  │  ├─ Login.tsx
+│  │  │  └─ Register.tsx
 │  │  ├─ styles
-│  │  └─ types
-│  │     └─ Applications.ts
+│  │  │  ├─ badges.css
+│  │  │  ├─ dashboard.css
+│  │  │  ├─ forms.css
+│  │  │  ├─ globals.css
+│  │  │  ├─ navbar.css
+│  │  │  └─ table.css
+│  │  ├─ types
+│  │  │  └─ Application.ts
+│  │  └─ utils
+│  │     ├─ deadlineClass.ts
+│  │     ├─ deadlineText.ts
+│  │     ├─ formatDate.ts
+│  │     └─ formatRelativeDates.ts
 │  ├─ tsconfig.app.json
 │  ├─ tsconfig.json
 │  ├─ tsconfig.node.json
@@ -72,8 +92,10 @@ JobPilot
    ├─ src
    │  ├─ db.ts
    │  ├─ index.ts
+   │  ├─ middleware
+   │  │  └─ authMiddleware.ts
    │  └─ types
-   │     └─ Applcations.ts
+   │     └─ Application.ts
    └─ tsconfig.json
 
 ```
