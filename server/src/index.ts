@@ -17,7 +17,9 @@ app.use(express.json());
 app.get('/', (req, res) => {
     res.send("JobPilot is Running!")
 })
-
+app.get('/health', (req, res) => {
+    res.status(200).json({ status: "OK" })
+})
 pool.query('SELECT NOW()', (err, res) => {
     if (err) {
         console.log("DB connection failed: ", err)
