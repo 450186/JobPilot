@@ -1,7 +1,8 @@
 import axios from 'axios'
 import type { Application } from '../types/Application'
 
-const API_URL = 'http://localhost:5001'
+const API_URL = 
+    import.meta.env.VITE_API_URL || 'http://localhost:5001'
 
 const getAuthHeaders = () => {
     const token = localStorage.getItem('token')
@@ -28,7 +29,7 @@ export const getApplications = async (): Promise<Application[]> => {
         const response = await axios.get(`${API_URL}/applications`, getAuthHeaders())
         return response.data
     } catch (err) {
-        handleAuthError(err)
+       throw handleAuthError(err)
     }
 }
 
@@ -50,7 +51,7 @@ export const createApplication = async (
         const response = await axios.post(`${API_URL}/applications`, application, getAuthHeaders())
         return response.data
     } catch (err) {
-        handleAuthError(err)
+        throw handleAuthError(err)
     }
 }
 
@@ -62,7 +63,7 @@ export const updateApplication = async (
     const response = await axios.put(`${API_URL}/applications/${id}`, application, getAuthHeaders())
     return response.data
     } catch (err) {
-        handleAuthError(err)
+        throw handleAuthError(err)
     }
 }
 
@@ -72,6 +73,6 @@ export const deleteApplication = async (
     try {
         await axios.delete(`${API_URL}/applications/${id}`, getAuthHeaders())
     } catch (err) {
-        handleAuthError(err)
+        throw handleAuthError(err)
     }
 }

@@ -1,6 +1,6 @@
 import type { Application } from "../types/Application"
 import { useState } from "react";
-import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from "recharts";
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip } from "recharts";
 
 type Props = {
     applications: Application[]

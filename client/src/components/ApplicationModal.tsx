@@ -45,10 +45,18 @@ const ApplicationModal = ({ application, isOpen, onClose, onEdit, onDelete }: Pr
                             </div>
                             <StatusBadge status={application.status} />
                         </div>
-                        <div className="modal-info">
-                            <Link size={24}/>
-                            <a href={application.job_url} target="_blank" rel="noopener noreferrer">View Job Listing</a>
-                        </div>
+                        {application.job_url && (
+                            <div className="model-info">
+                                <Link size={24}/>
+                                <a
+                                    href={application.job_url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    View Job Listing
+                                </a>
+                            </div>
+                        )}
                     </div>
                 </div>
                 <div className="divider" />
@@ -77,7 +85,7 @@ const ApplicationModal = ({ application, isOpen, onClose, onEdit, onDelete }: Pr
                         <p>{application.deadline ? formatRelativeDate(application.deadline) : "Rolling deadline"}</p>
                     </div>
                     <p className="modal-label">Notes</p>
-                    {application.notes.length > 0 ? (
+                    {(application.notes?.length ?? 0) > 0 ? (
                         <div className="modal-info">
                             <Notebook size={24}/>
                             <p>{application.notes}</p>

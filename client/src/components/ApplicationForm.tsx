@@ -147,7 +147,7 @@ function ApplicationForm({ onApplicationSaved, applicationToEdit }: ApplicationF
                 <input
                     name="deadline"
                     type="date"
-                    value={formData.deadline}
+                    value={formData.deadline ?? ""}
                     onChange={handleChange}
                     disabled={isRollingDeadline}
                 />

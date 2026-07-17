@@ -1,8 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
 import { Toaster } from 'react-hot-toast'
 import './styles/globals.css'
 import './styles/navbar.css'

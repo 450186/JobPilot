@@ -3,7 +3,7 @@ import type { Application } from "../types/Application";
 import ApplicationForm from "./ApplicationForm";
 
 type ApplicationsFormModalProps = {
-    applicationToEdit: Application
+    applicationToEdit: Application | null
     isOpen: boolean
     onClose: () => void
     onSaved: () => void
