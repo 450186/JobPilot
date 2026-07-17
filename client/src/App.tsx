@@ -1,4 +1,7 @@
 import { Routes, Route } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { checkApiHealth } from "./api/health";
+import ServerLoadingScreen from "./components/ServerLoadingScreen";
 import Navbar from "./components/Navbar";
 import Dashboard from "./pages/Dashboard";
 import Applications from "./pages/Applications";
@@ -7,6 +10,36 @@ import Register from "./pages/Register";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
+  const [isApiReady, setIsApiReady] = useState(false);
+  useEffect(() => {
+      let isCancelled = false;
+      let retryTimeout: ReturnType<typeof setTimeout>;
+
+      const waitForApi = async () => {
+          const isReady = await checkApiHealth();
+
+          if (isCancelled) {
+              return;
+          }
+
+          if (isReady) {
+              setIsApiReady(true);
+              return;
+          }
+
+          retryTimeout = setTimeout(waitForApi, 3000);
+      };
+
+      waitForApi();
+
+      return () => {
+          isCancelled = true;
+          clearTimeout(retryTimeout);
+      };
+  }, []);
+if(!isApiReady) {
+  return <ServerLoadingScreen />
+}
   return (
     <>
       <Navbar />
