@@ -139,19 +139,21 @@ function Applications() {
                     setApplicationToEdit(application)
                 }} onDelete={handleDelete} />
             )}
-            <div className="pagination">
-                <button className="pagination-btn"
-                disabled={applicationPage === 1} 
-                onClick={() => setApplicationPage(applicationPage - 1)}>
-                    <SquareChevronLeft className="page-chevron" size={30} strokeWidth={3} />
-                </button>
-                <p className="pagination-page">{applicationPage} of {totalPages}</p>
-                <button className="pagination-btn"
-                disabled={applicationPage === totalPages}
-                onClick={() => setApplicationPage(applicationPage + 1)}>
-                    <SquareChevronRight className="page-chevron" size={30} strokeWidth={3} />
-                </button>
-            </div>
+            {applications.length > visibleApplications.length && (
+                <div className="pagination">
+                    <button className="pagination-btn"
+                    disabled={applicationPage === 1} 
+                    onClick={() => setApplicationPage(applicationPage - 1)}>
+                        <SquareChevronLeft className="page-chevron" size={30} strokeWidth={3} />
+                    </button>
+                    <p className="pagination-page">{applicationPage} of {totalPages}</p>
+                    <button className="pagination-btn"
+                    disabled={applicationPage === totalPages}
+                    onClick={() => setApplicationPage(applicationPage + 1)}>
+                        <SquareChevronRight className="page-chevron" size={30} strokeWidth={3} />
+                    </button>
+                </div>  
+            )}
         </main>
     )
 }
